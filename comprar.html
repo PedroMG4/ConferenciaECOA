@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Entradas - Conferencia Coaching Ontológico</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <i class="fas fa-graduation-cap"></i>
+                <span>ECOA</span>
+            </div>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Volver al inicio
+            </a>
+        </nav>
+    </header>
+
+    <!-- Purchase Section -->
+    <section class="purchase-section">
+        <div class="container">
+            <div class="purchase-header">
+                <h1>Comprar Entradas</h1>
+                <p>Completa tus datos para adquirir las entradas de la Conferencia de Coaching Ontológico</p>
+            </div>
+
+            <div class="purchase-content">
+                <!-- Ticket Selection -->
+                <div class="ticket-selection">
+                    <h2>Entrada General</h2>
+                    <div class="ticket-options">
+                        <div class="ticket-option featured single-option" data-price="10000" data-type="general">
+                            <div class="popular-badge">Única Opción</div>
+                            <div class="ticket-header">
+                                <div class="ticket-icon">
+                                    <i class="fas fa-ticket-alt"></i>
+                                </div>
+                                <h3>Entrada General</h3>
+                                <div class="price">$10.000</div>
+                            </div>
+                            <p class="ticket-description">Incluye acceso completo a la conferencia</p>
+                            <div class="ticket-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Charla de Agustina Savino</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Taller de Valeria Patrono</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Coaching en vivo</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Coffee break incluido</span>
+                                </div>
+                            </div>
+                            <button class="select-ticket" onclick="selectTicket('general', 10000)">
+                                <i class="fas fa-shopping-cart"></i>
+                                Seleccionar Entrada
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Form -->
+                <div class="customer-form" id="customerForm" style="display: none;">
+                    <h2>Información del Comprador</h2>
+                    <form id="purchaseForm">
+                        <div class="form-group">
+                            <label for="firstName">Nombre *</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Apellido *</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Teléfono *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quantity">Cantidad de Entradas *</label>
+                            <input type="number" id="quantity" name="quantity" min="1" max="20" value="1" required onchange="calculateTotal()" placeholder="Ingresa la cantidad de entradas">
+                            <small class="form-help">Máximo 20 entradas por compra</small>
+                        </div>
+
+                        <div class="selected-ticket-info">
+                            <div class="ticket-summary">
+                                <h3>Resumen de Compra</h3>
+                                <div class="summary-item">
+                                    <span>Entrada:</span>
+                                    <span id="selectedTicketType">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Cantidad:</span>
+                                    <span id="selectedQuantity">-</span>
+                                </div>
+                                <div class="summary-item total">
+                                    <span>Total:</span>
+                                    <span id="totalAmount">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="pay-button" onclick="processPayment()" id="payButton">
+                            <i class="fas fa-credit-card"></i>
+                            Proceder al Pago
+                        </button>
+                        
+                        <!-- Botón de simulación -->
+                        <button type="button" class="btn-secondary" onclick="simulatePurchase()" style="background: linear-gradient(135deg, #96ceb4, #feca57); color: white; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; justify-content: center; margin: 1rem auto 0; max-width: 300px; width: 100%;">
+                            <i class="fas fa-magic"></i>
+                            Simular Compra (Demo)
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Payment Section -->
+                <div class="payment-section" id="paymentSection" style="display: none;">
+                    <h2>Procesando Pago</h2>
+                    <div class="payment-info">
+                        <div class="payment-summary">
+                            <h3>Resumen del Pago</h3>
+                            <div class="summary-details">
+                                <div class="detail-row">
+                                    <span>Entrada:</span>
+                                    <span id="paymentTicketType">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Cantidad:</span>
+                                    <span id="paymentQuantity">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Precio unitario:</span>
+                                    <span id="paymentUnitPrice">-</span>
+                                </div>
+                                <div class="detail-row total">
+                                    <span>Total a pagar:</span>
+                                    <span id="paymentTotal">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- MercadoPago Checkout -->
+                        <div id="mercadopago-checkout" class="mercadopago-container">
+                            <!-- Aquí se renderizará el botón de MercadoPago -->
+                        </div>
+                        
+                        <div class="payment-security">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Tu pago está protegido con encriptación SSL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Procesando tu pago...</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ECOA</h3>
+                    <p>Escuela Coaching Ontológico Americano</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> info@ecoa.com</p>
+                    <p><i class="fas fa-phone"></i> 379-4335052</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ECOA. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="purchase.js"></script>
+</body>
+</html>

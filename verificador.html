@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador de Entradas - TechConf 2024</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <i class="fas fa-qrcode"></i>
+                <span>Verificador TechConf</span>
+            </div>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Volver al inicio
+            </a>
+        </nav>
+    </header>
+
+    <!-- Verifier Section -->
+    <section class="verifier-section">
+        <div class="container">
+            <div class="verifier-header">
+                <h1>Verificador de Entradas</h1>
+                <p>Escanea el código QR de las entradas para verificar su validez</p>
+            </div>
+
+            <div class="verifier-content">
+                <!-- Scanner Section -->
+                <div class="scanner-section">
+                    <div class="scanner-container">
+                        <div id="qr-reader" class="qr-reader"></div>
+                        <div id="qr-reader-results" class="qr-results"></div>
+                    </div>
+                    
+                    <div class="scanner-controls">
+                        <button id="start-scanner" class="scanner-btn primary">
+                            <i class="fas fa-camera"></i>
+                            Iniciar Escáner
+                        </button>
+                        <button id="stop-scanner" class="scanner-btn secondary" style="display: none;">
+                            <i class="fas fa-stop"></i>
+                            Detener Escáner
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Manual Input Section -->
+                <div class="manual-input-section">
+                    <h3>O ingresa manualmente</h3>
+                    <div class="input-group">
+                        <input type="text" id="manual-qr" placeholder="Pega el contenido del QR aquí">
+                        <button id="verify-manual" class="verify-btn">
+                            <i class="fas fa-search"></i>
+                            Verificar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="verification-results" class="results-section" style="display: none;">
+                    <div class="result-card">
+                        <div class="result-icon">
+                            <i class="fas fa-check-circle success"></i>
+                        </div>
+                        <div class="result-content">
+                            <h3>Entrada Válida</h3>
+                            <div class="ticket-details">
+                                <div class="detail-row">
+                                    <span class="label">Cliente:</span>
+                                    <span class="value" id="customer-name">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Tipo:</span>
+                                    <span class="value" id="ticket-type">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Cantidad:</span>
+                                    <span class="value" id="ticket-quantity">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Evento:</span>
+                                    <span class="value" id="event-name">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Estado:</span>
+                                    <span class="value status-approved">Aprobado</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-actions">
+                            <button class="action-btn success" onclick="markAsUsed()">
+                                <i class="fas fa-check"></i>
+                                Marcar como Usado
+                            </button>
+                            <button class="action-btn secondary" onclick="resetScanner()">
+                                <i class="fas fa-redo"></i>
+                                Verificar Otra
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Results -->
+                <div id="error-results" class="results-section" style="display: none;">
+                    <div class="result-card error">
+                        <div class="result-icon">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="result-content">
+                            <h3>Entrada Inválida</h3>
+                            <p id="error-message">El código QR no es válido o la entrada no existe.</p>
+                        </div>
+                        <div class="result-actions">
+                            <button class="action-btn secondary" onclick="resetScanner()">
+                                <i class="fas fa-redo"></i>
+                                Intentar Otra Vez
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <h3>Estadísticas del Día</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="total-scanned">0</div>
+                                <div class="stat-label">Entradas Escaneadas</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="valid-tickets">0</div>
+                                <div class="stat-label">Válidas</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="invalid-tickets">0</div>
+                                <div class="stat-label">Inválidas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TechConf 2024</h3>
+                    <p>Sistema de verificación de entradas</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> info@techconf2024.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TechConf. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Variables globales
+        let html5QrcodeScanner = null;
+        let totalScanned = 0;
+        let validTickets = 0;
+        let invalidTickets = 0;
+
+        // Inicializar cuando la página carga
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeScanner();
+            setupEventListeners();
+        });
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            document.getElementById('start-scanner').addEventListener('click', startScanner);
+            document.getElementById('stop-scanner').addEventListener('click', stopScanner);
+            document.getElementById('verify-manual').addEventListener('click', verifyManual);
+            
+            // Enter key en input manual
+            document.getElementById('manual-qr').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyManual();
+                }
+            });
+        }
+
+        // Inicializar el escáner
+        function initializeScanner() {
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "qr-reader",
+                { 
+                    fps: 10, 
+                    qrbox: { width: 250, height: 250 },
+                    aspectRatio: 1.0
+                },
+                false
+            );
+        }
+
+        // Iniciar escáner
+        function startScanner() {
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            document.getElementById('start-scanner').style.display = 'none';
+            document.getElementById('stop-scanner').style.display = 'inline-flex';
+        }
+
+        // Detener escáner
+        function stopScanner() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+            }
+            document.getElementById('start-scanner').style.display = 'inline-flex';
+            document.getElementById('stop-scanner').style.display = 'none';
+        }
+
+        // Función de éxito del escáner
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log('QR escaneado:', decodedText);
+            verifyQR(decodedText);
+        }
+
+        // Función de error del escáner
+        function onScanFailure(error) {
+            // No mostrar errores en consola para evitar spam
+        }
+
+        // Verificar QR manual
+        function verifyManual() {
+            const qrData = document.getElementById('manual-qr').value.trim();
+            if (qrData) {
+                verifyQR(qrData);
+                document.getElementById('manual-qr').value = '';
+            } else {
+                alert('Por favor, ingresa un código QR válido');
+            }
+        }
+
+        // Verificar código QR
+        async function verifyQR(qrData) {
+            try {
+                totalScanned++;
+                updateStats();
+
+                const response = await fetch('/api/verify-qr', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ qrData: qrData })
+                });
+
+                const result = await response.json();
+
+                if (result.valid) {
+                    validTickets++;
+                    showValidResult(result.ticket);
+                } else {
+                    invalidTickets++;
+                    showErrorResult(result.message);
+                }
+
+                updateStats();
+
+            } catch (error) {
+                console.error('Error verificando QR:', error);
+                invalidTickets++;
+                showErrorResult('Error de conexión. Verifica tu conexión a internet.');
+                updateStats();
+            }
+        }
+
+        // Mostrar resultado válido
+        function showValidResult(ticket) {
+            document.getElementById('customer-name').textContent = ticket.customerName;
+            document.getElementById('ticket-type').textContent = ticket.ticketType;
+            document.getElementById('ticket-quantity').textContent = ticket.quantity;
+            document.getElementById('event-name').textContent = ticket.eventName;
+
+            document.getElementById('verification-results').style.display = 'block';
+            document.getElementById('error-results').style.display = 'none';
+
+            // Scroll a resultados
+            document.getElementById('verification-results').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Mostrar resultado de error
+        function showErrorResult(message) {
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-results').style.display = 'block';
+            document.getElementById('verification-results').style.display = 'none';
+
+            // Scroll a resultados
+            document.getElementById('error-results').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            document.getElementById('total-scanned').textContent = totalScanned;
+            document.getElementById('valid-tickets').textContent = validTickets;
+            document.getElementById('invalid-tickets').textContent = invalidTickets;
+        }
+
+        // Marcar como usado (función placeholder)
+        function markAsUsed() {
+            // Aquí se podría implementar lógica para marcar la entrada como usada
+            alert('Entrada marcada como usada');
+            resetScanner();
+        }
+
+        // Resetear escáner
+        function resetScanner() {
+            document.getElementById('verification-results').style.display = 'none';
+            document.getElementById('error-results').style.display = 'none';
+            
+            // Reiniciar escáner si está activo
+            if (document.getElementById('stop-scanner').style.display !== 'none') {
+                stopScanner();
+                setTimeout(startScanner, 100);
+            }
+        }
+
+        // Limpiar recursos al cerrar la página
+        window.addEventListener('beforeunload', function() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+            }
+        });
+    </script>
+
+    <style>
+        /* Estilos específicos para el verificador */
+        .verifier-section {
+            padding: 120px 0 80px;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .verifier-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .verifier-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .verifier-header p {
+            font-size: 1.2rem;
+            color: #6b7280;
+        }
+
+        .verifier-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .scanner-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .qr-reader {
+            margin: 2rem 0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .scanner-controls {
+            margin-top: 2rem;
+        }
+
+        .scanner-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .scanner-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .scanner-btn.secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .scanner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .manual-input-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .manual-input-section h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .verify-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .result-card {
+            text-align: center;
+        }
+
+        .result-card.error {
+            border-left: 5px solid #ef4444;
+        }
+
+        .result-icon {
+            margin-bottom: 1rem;
+        }
+
+        .result-icon i {
+            font-size: 4rem;
+        }
+
+        .result-icon i.success {
+            color: #10b981;
+        }
+
+        .result-icon i:not(.success) {
+            color: #ef4444;
+        }
+
+        .result-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+
+        .ticket-details {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row .label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .detail-row .value {
+            color: #1f2937;
+        }
+
+        .status-approved {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .result-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .action-btn.secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-section h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1f2937;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .verifier-header h1 {
+                font-size: 2rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

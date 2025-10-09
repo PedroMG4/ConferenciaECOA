@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Gracias por tu Compra! - Conferencia Coaching Ontológico</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <i class="fas fa-graduation-cap"></i>
+                <span>ECOA</span>
+            </div>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-home"></i>
+                Volver al inicio
+            </a>
+        </nav>
+    </header>
+
+    <!-- Thank You Section -->
+    <section class="thank-you-section">
+        <div class="container">
+            <div class="thank-you-content">
+                <!-- Success Animation -->
+                <div class="success-animation">
+                    <div class="checkmark">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <!-- Thank You Message -->
+                <div class="thank-you-message">
+                    <h1>¡Gracias por tu Compra!</h1>
+                    <p class="subtitle">Tu compra ha sido procesada exitosamente</p>
+                    
+                    <div class="purchase-details">
+                        <div class="detail-card">
+                            <div class="detail-icon">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
+                            <div class="detail-info">
+                                <h3>Entradas Confirmadas</h3>
+                                <p><span id="ticketQuantity">3</span> entradas para la Conferencia de Coaching Ontológico</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="detail-info">
+                                <h3>Fecha del Evento</h3>
+                                <p>12 de Diciembre de 2025 a las 19:00 hs</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="detail-info">
+                                <h3>Ubicación</h3>
+                                <p>Salón Auditorio - Hospital Escuela José de San Martín</p>
+                                <a href="https://www.google.com/maps/place/Hospital+Escuela+%22Jos%C3%A9+de+San+Mart%C3%ADn%22/data=!4m2!3m1!1s0x0:0x57f516c59242356d?sa=X&ved=1t:2428&ictx=111" target="_blank" class="location-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    Ver en Google Maps
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="detail-info">
+                                <h3>Correo Electrónico</h3>
+                                <p>Hemos enviado tus entradas con códigos QR a: <strong id="customerEmail">cliente@ejemplo.com</strong></p>
+                                <p class="email-note">Revisa tu bandeja de entrada y carpeta de spam</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QR Code Display -->
+                <div class="qr-section">
+                    <h2>Código QR de tu Compra</h2>
+                    <div class="qr-container">
+                        <div class="qr-code" id="qrCode">
+                            <!-- QR Code will be generated here -->
+                        </div>
+                        <p class="qr-note">Presenta este código en la entrada del evento</p>
+                    </div>
+                </div>
+
+                <!-- Important Information -->
+                <div class="important-info">
+                    <h2>Información Importante</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <h4>Horario de Registro</h4>
+                            <p>Llega 30 minutos antes del inicio (18:30 hs)</p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-id-card"></i>
+                            <h4>Documentación</h4>
+                            <p>Trae una identificación oficial</p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <h4>Código QR</h4>
+                            <p>Presenta el código QR o el correo electrónico</p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-parking"></i>
+                            <h4>Estacionamiento</h4>
+                            <p>No hay estacionamiento gratuito disponible</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <h3>¿Tienes alguna pregunta?</h3>
+                    <p>No dudes en contactarnos:</p>
+                    <div class="contact-details">
+                        <p><i class="fas fa-envelope"></i> info@ecoa.com</p>
+                        <p><i class="fas fa-phone"></i> 379-4335052</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="window.location.href='index.html'">
+                        <i class="fas fa-home"></i>
+                        Volver al Inicio
+                    </button>
+                    <button class="btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print"></i>
+                        Imprimir Confirmación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ECOA</h3>
+                    <p>Escuela Coaching Ontológico Americano</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> info@ecoa.com</p>
+                    <p><i class="fas fa-phone"></i> 379-4335052</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ECOA. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script>
+        // Generar QR único para la compra
+        function generatePurchaseQR(purchaseData) {
+            const qrData = {
+                purchaseId: purchaseData.paymentId,
+                customerName: `${purchaseData.firstName} ${purchaseData.lastName}`,
+                email: purchaseData.email,
+                quantity: purchaseData.quantity,
+                ticketType: purchaseData.ticketType,
+                eventName: 'Conferencia Coaching Ontológico',
+                eventDate: '2025-12-12',
+                eventTime: '19:00',
+                venue: 'Hospital Escuela José de San Martín',
+                totalAmount: purchaseData.total,
+                purchaseDate: purchaseData.purchaseDate
+            };
+
+            // Generar QR con los datos de la compra
+            QRCode.toCanvas(document.getElementById('qrCode'), JSON.stringify(qrData), {
+                width: 200,
+                margin: 2,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            }, function (error) {
+                if (error) console.error(error);
+                console.log('QR generado exitosamente!');
+            });
+
+            return qrData;
+        }
+
+        // Mostrar detalles de la compra
+        function showPurchaseDetails(purchaseData) {
+            document.getElementById('ticketQuantity').textContent = purchaseData.quantity;
+            document.getElementById('customerEmail').textContent = purchaseData.email;
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener datos de la compra desde localStorage
+            const purchaseData = JSON.parse(localStorage.getItem('purchaseData'));
+            
+            if (purchaseData) {
+                showPurchaseDetails(purchaseData);
+                generatePurchaseQR(purchaseData);
+                
+                // Limpiar localStorage después de mostrar los datos
+                localStorage.removeItem('purchaseData');
+            } else {
+                // Datos por defecto si no hay datos de compra
+                const defaultData = {
+                    firstName: 'Juan',
+                    lastName: 'Pérez',
+                    email: 'juan.perez@ejemplo.com',
+                    quantity: 3,
+                    total: 30000,
+                    paymentId: 'ECO-DEMO-123456789'
+                };
+                showPurchaseDetails(defaultData);
+                generatePurchaseQR(defaultData);
+            }
+        });
+    </script>
+</body>
+</html>
