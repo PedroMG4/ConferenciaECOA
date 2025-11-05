@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/comprar",
+      "destination": "/comprar.html"
+    },
+    {
+      "source": "/gracias",
+      "destination": "/gracias.html"
+    },
+    {
+      "source": "/verificador",
+      "destination": "/verificador.html"
+    }
+  ]
+}
