@@ -1,0 +1,106 @@
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Variables de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+error.log
+combined.log
+
+# Sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos temporales
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# Build y distribución
+dist/
+build/
+*.min.js
+*.min.css
+
+# Testing
+coverage/
+.nyc_output/
+*.test.js.snap
+*.spec.js.snap
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Base de datos
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de backup
+*.bak
+*.backup
+*.old
+
+# Archivos de simulación/demo (opcional - descomentar si no quieres subirlos)
+# simulate-demo.js
+# simulate-email.js
+# DEMO-INSTRUCCIONES.md
+
+# Archivos sensibles
+*.pem
+*.key
+*.cert
+secrets/
+.secrets
+
+# Archivos de configuración local
+config/local.json
+config/local.js
+
+# MongoDB
+data/
+*.pid
+
+# PM2
+.pm2/
+
+# Misceláneos
+*.zip
+*.tar.gz
+*.rar
