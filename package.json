@@ -1,27 +1,16 @@
 {
   "name": "conferencia-ecoa-frontend",
   "version": "1.0.0",
-  "description": "Sitio web frontend para conferencia de Coaching Ontológico - ECOA",
-  "main": "index.html",
-  "scripts": {
-    "start": "echo 'Abre index.html en tu navegador'",
-    "build": "echo 'No build step required for this project'"
-  },
+  "description": "Sitio web frontend estático para conferencia de Coaching Ontológico - ECOA",
+  "scripts": {},
   "keywords": [
     "conferencia",
     "coaching",
     "ontologico",
     "ecoa",
-    "frontend"
+    "frontend",
+    "static"
   ],
   "author": "Pedro Martín",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tu-usuario/conferencia-ecoa.git"
-  },
-  "bugs": {
-    "url": "https://github.com/tu-usuario/conferencia-ecoa/issues"
-  },
-  "homepage": "https://github.com/tu-usuario/conferencia-ecoa#readme"
+  "license": "MIT"
 }
