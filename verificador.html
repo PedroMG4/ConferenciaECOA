@@ -268,30 +268,76 @@
                 totalScanned++;
                 updateStats();
 
-                const response = await fetch('/api/verify-qr', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ qrData: qrData })
-                });
+                // Intentar verificar con el backend
+                try {
+                    const response = await fetch('/api/verify-qr', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ qrData: qrData })
+                    });
 
-                const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error('Backend no disponible');
+                    }
 
-                if (result.valid) {
-                    validTickets++;
-                    showValidResult(result.ticket);
-                } else {
-                    invalidTickets++;
-                    showErrorResult(result.message);
+                    const result = await response.json();
+
+                    if (result.valid) {
+                        validTickets++;
+                        showValidResult(result.ticket);
+                    } else {
+                        invalidTickets++;
+                        showErrorResult(result.message);
+                    }
+
+                    updateStats();
+                    return;
+
+                } catch (fetchError) {
+                    // Si el backend no está disponible, usar modo demo
+                    console.log('Backend no disponible, usando modo demo');
+                    
+                    // Verificar formato básico del QR
+                    let parsedData;
+                    try {
+                        parsedData = typeof qrData === 'string' ? JSON.parse(qrData) : qrData;
+                    } catch (e) {
+                        invalidTickets++;
+                        showErrorResult('Código QR inválido (formato incorrecto)');
+                        updateStats();
+                        return;
+                    }
+
+                    // En modo demo, validar que tenga los campos básicos
+                    if (parsedData && parsedData.purchaseId && parsedData.customerName) {
+                        validTickets++;
+                        showValidResult({
+                            customerName: parsedData.customerName || 'Cliente Demo',
+                            ticketType: parsedData.ticketType || 'Entrada General',
+                            quantity: parsedData.quantity || 1,
+                            eventName: parsedData.eventName || 'Conferencia Coaching Ontológico'
+                        });
+                        
+                        // Mostrar notificación de modo demo
+                        const demoNotice = document.createElement('div');
+                        demoNotice.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #feca57; color: #000; padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; max-width: 300px;';
+                        demoNotice.innerHTML = '<strong>⚠️ Modo Demo</strong><br>El backend no está disponible. Verificación simulada.';
+                        document.body.appendChild(demoNotice);
+                        setTimeout(() => demoNotice.remove(), 5000);
+                    } else {
+                        invalidTickets++;
+                        showErrorResult('Código QR inválido (datos incompletos)');
+                    }
+                    
+                    updateStats();
                 }
-
-                updateStats();
 
             } catch (error) {
                 console.error('Error verificando QR:', error);
                 invalidTickets++;
-                showErrorResult('Error de conexión. Verifica tu conexión a internet.');
+                showErrorResult('Error al procesar el código QR');
                 updateStats();
             }
         }

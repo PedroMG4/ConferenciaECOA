@@ -222,17 +222,26 @@
                 // Limpiar localStorage después de mostrar los datos
                 localStorage.removeItem('purchaseData');
             } else {
-                // Datos por defecto si no hay datos de compra
+                // Datos por defecto si no hay datos de compra (modo demo)
                 const defaultData = {
                     firstName: 'Juan',
                     lastName: 'Pérez',
                     email: 'juan.perez@ejemplo.com',
                     quantity: 3,
                     total: 30000,
-                    paymentId: 'ECO-DEMO-123456789'
+                    ticketType: 'Entrada General',
+                    paymentId: 'ECO-DEMO-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                    purchaseDate: new Date().toISOString()
                 };
                 showPurchaseDetails(defaultData);
                 generatePurchaseQR(defaultData);
+                
+                // Mostrar notificación de modo demo
+                const demoNotice = document.createElement('div');
+                demoNotice.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #feca57; color: #000; padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; max-width: 300px;';
+                demoNotice.innerHTML = '<strong>🎨 Modo Demo</strong><br>Mostrando datos de ejemplo. En producción mostrará los datos reales de la compra.';
+                document.body.appendChild(demoNotice);
+                setTimeout(() => demoNotice.remove(), 5000);
             }
         });
     </script>

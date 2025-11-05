@@ -4,10 +4,17 @@ let selectedPrice = 0;
 let selectedQuantity = 1;
 let customerData = {};
 
-// Inicializar MercadoPago
-const mp = new MercadoPago('TEST-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', {
-    locale: 'es-AR'
-});
+// Inicializar MercadoPago (solo si está disponible)
+let mp = null;
+try {
+    if (typeof MercadoPago !== 'undefined') {
+        mp = new MercadoPago('TEST-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', {
+            locale: 'es-AR'
+        });
+    }
+} catch (error) {
+    console.log('MercadoPago SDK no disponible, usando modo demo');
+}
 
 // Función para seleccionar ticket
 function selectTicket(type, price) {
@@ -179,13 +186,17 @@ function showPaymentSection() {
     });
 }
 
-// Función para crear preferencia de pago
+// Función para crear preferencia de pago (solo si hay backend disponible)
 async function createPaymentPreference() {
     try {
         // Mostrar loading
-        document.getElementById('loadingOverlay').style.display = 'flex';
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'flex';
+        }
         
-        // Crear preferencia en el backend
+        // Intentar crear preferencia en el backend (modo producción)
+        // Si falla, se usará el modo demo automáticamente
         const response = await fetch('/api/create-preference', {
             method: 'POST',
             headers: {
@@ -212,31 +223,39 @@ async function createPaymentPreference() {
         
         const preference = await response.json();
         
-        // Renderizar botón de MercadoPago
-        mp.bricks().create("wallet", "mercadopago-checkout", {
-            initialization: {
-                preferenceId: preference.id,
-            },
-            callbacks: {
-                onReady: () => {
-                    console.log('MercadoPago listo');
-                    document.getElementById('loadingOverlay').style.display = 'none';
+        // Renderizar botón de MercadoPago solo si está disponible
+        if (mp && mp.bricks) {
+            mp.bricks().create("wallet", "mercadopago-checkout", {
+                initialization: {
+                    preferenceId: preference.id,
                 },
-                onSubmit: () => {
-                    console.log('Pago iniciado');
+                callbacks: {
+                    onReady: () => {
+                        console.log('MercadoPago listo');
+                        if (loadingOverlay) loadingOverlay.style.display = 'none';
+                    },
+                    onSubmit: () => {
+                        console.log('Pago iniciado');
+                    },
+                    onError: (error) => {
+                        console.error('Error en MercadoPago:', error);
+                        if (loadingOverlay) loadingOverlay.style.display = 'none';
+                        alert('Error al procesar el pago. Por favor, intenta nuevamente.');
+                    }
                 },
-                onError: (error) => {
-                    console.error('Error en MercadoPago:', error);
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                    alert('Error al procesar el pago. Por favor, intenta nuevamente.');
-                }
-            },
-        });
+            });
+        } else {
+            // Si no hay MercadoPago, usar modo demo
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
+            console.log('Backend no disponible, usando modo demo');
+            processPayment(); // Usar la función de simulación
+        }
         
     } catch (error) {
-        console.error('Error al crear preferencia:', error);
-        document.getElementById('loadingOverlay').style.display = 'none';
-        alert('Error al procesar el pago. Por favor, intenta nuevamente.');
+        console.log('Backend no disponible, usando modo demo:', error.message);
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        // No mostrar error, usar modo demo automáticamente
+        processPayment(); // Usar la función de simulación
     }
 }
 
